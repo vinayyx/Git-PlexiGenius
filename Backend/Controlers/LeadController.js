@@ -69,26 +69,49 @@ export const getLeadsById = async (req, res) => {
 
 //UPDATE Leads BY ID
 
+// UPDATE Leads BY ID
 export const updateLeadsById = async (req, res) => {
   try {
     const { id } = req.params;
-    const data = req.body;
 
-    const updateLeads = await Leads.findByIdAndUpdate(id, data, {
+    // Multer ke through file aaye to uska path le lo
+    const imageUrl = req.file?.path;
+
+    // Body ke fields nikaalo
+    const { companyName, email, phone, Tag, status, Employee } = req.body;
+
+    const updateData = {
+      companyName,
+      email,
+      phone,
+      Tag,
+      status,
+      Employee,
+    };
+
+    // Agar image bheji gayi ho to updateData me daalo
+    if (imageUrl) {
+      updateData.image = imageUrl;
+    }
+
+    const updatedLead = await Leads.findByIdAndUpdate(id, updateData, {
       new: true,
     });
-    if (!updateLeads) {
-      return res.status(404).json({ message: "Employee not Found" });
+
+    if (!updatedLead) {
+      return res.status(404).json({ message: "Lead not found" });
     }
+
     return res.status(200).json({
-      status: true,
-      message: "Leads updated successfully",
-      updatedLead: updateLeads,
+      success: true,
+      message: "Lead updated successfully",
+      data: updatedLead,
     });
   } catch (err) {
-    return res.status(500).json({ status: false, message: err.message });
+    return res.status(500).json({ success: false, message: err.message });
   }
 };
+
 
 //DELTE Leads BY ID
 

@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { X } from "lucide-react";
 import axios from "axios";
 import { CounterContext } from "../Context/Context";
+import toast from "react-hot-toast";
 
 function EditEmployee({ isOpen, onClose }) {
   const [form, setForm] = useState({
@@ -23,12 +24,11 @@ function EditEmployee({ isOpen, onClose }) {
         try {
           const res = await axios.get(
             `${
-              import.meta.env.VITE_BACKEND_URL}/api/getLeadsById/${selectedId}`
+              import.meta.env.VITE_BACKEND_URL}/api/getEmployeeById/${selectedId}`
           );
 
           const emp = res.data.data
 
-          console.log(emp)
 
           setForm({
             company: emp.companyName , 
@@ -47,7 +47,7 @@ function EditEmployee({ isOpen, onClose }) {
     fetchEmployee();
   }, [selectedId, isOpen]);
 
-  console.log(selectedId)
+
 
   if (!isOpen) return null;
 
@@ -62,7 +62,7 @@ function EditEmployee({ isOpen, onClose }) {
 
     try {
       const res = await axios.put(
-        `${import.meta.env.VITE_BACKEND_URL}/api/updateLeadsById/${selectedId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/updateEmployeById/${selectedId}`,
         {
           companyName: form.company,
           email: form.email,
@@ -74,13 +74,14 @@ function EditEmployee({ isOpen, onClose }) {
       );
       
 
-      console.log("Employee updated successfully:", res.data);
+     toast.success("Employee updated successfully")
 
 
 
       onClose(); // modal close after success
     } catch (error) {
       console.error("Error updating employee:", error);
+      toast.error(error)
     }
   };
 

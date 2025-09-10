@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 function AddEmployeeModal({ isOpen, onClose }) {
   const [form, setForm] = useState({
@@ -52,9 +53,10 @@ function AddEmployeeModal({ isOpen, onClose }) {
 
       onClose()
 
-      console.log("employ created successfully");
+      toast.success("employ created successfully")
     } catch (error) {
       console.log(error);
+      toast.error(error)
     }
   };
 

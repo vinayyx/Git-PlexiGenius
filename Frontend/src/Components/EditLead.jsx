@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { X } from "lucide-react";
 import axios from "axios";
 import { CounterContext } from "../Context/Context";
+import toast from "react-hot-toast";
 
 function EditLead({ isOpen, onClose }) {
   const [employees, setEmployees] = useState([]);
@@ -87,13 +88,15 @@ function EditLead({ isOpen, onClose }) {
         formData.append("image", form.image);
       }
 
+      console.log(formData);
+
       const res = await axios.put(
         `${import.meta.env.VITE_BACKEND_URL}/api/updateLeadsById/${selectedId}`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
-      console.log("Lead updated successfully:", res.data);
+      toast.success("Lead updated");
 
       onClose(); // close modal after success
     } catch (error) {

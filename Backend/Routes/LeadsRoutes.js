@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post("/addnewLead", upload.single("image"), addNewLeads);
 router.get("/getAllLeads", getAllLeads )
-router.put("/updateLeadsById/:id", updateLeadsById )
+router.put("/updateLeadsById/:id", upload.single("image"), updateLeadsById )
 router.delete("/deleteLeadsById/:id", deleteLeadsById )
 router.get("/getLeadsById/:id", getLeadsById )
 

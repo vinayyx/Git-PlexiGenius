@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import axios from "axios";
+import toast from "react-hot-toast";
+import Spinner from "./Spinner";
 
 function AddLeadModal({ isOpen, onClose }) {
-  const [employees, setEmployees] = useState([]); // employee list
+  const [employees, setEmployees] = useState([]);
+  const [loading, setLoading] = useState(false); // 👈 loading state
 
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
         const res = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/api/getAllEmployee`
-        ); // yaha teri getAllEmployees API ka URL
-        setEmployees(res.data.data); // maan le API response: { data: [ { _id, companyName, email } ] }
+        );
+        setEmployees(res.data.data);
       } catch (err) {
         console.error("Error fetching employees:", err);
       }
@@ -42,6 +45,7 @@ function AddLeadModal({ isOpen, onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); 
 
     try {
       const formData = new FormData();
@@ -55,13 +59,11 @@ function AddLeadModal({ isOpen, onClose }) {
         formData.append("image", form.image);
       }
 
-      const res = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/addnewLead`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-
-      console.log("Lead created:", res.data);
 
       setForm({
         companyName: "",
@@ -73,9 +75,13 @@ function AddLeadModal({ isOpen, onClose }) {
         employee: "",
       });
 
+      toast.success("Lead created");
       onClose();
     } catch (error) {
       console.log(error);
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false); 
     }
   };
 
@@ -196,9 +202,10 @@ function AddLeadModal({ isOpen, onClose }) {
           {/* Submit */}
           <button
             type="submit"
-            className="w-full bg-red-500 text-white font-semibold py-3 rounded-lg hover:bg-red-600 transition"
+            className="w-full bg-red-500 text-white font-semibold py-3 rounded-lg hover:bg-red-600 transition flex justify-center items-center"
+            disabled={loading} 
           >
-            Add Lead
+            {loading ? <Spinner size={24} /> : "Add Lead"}
           </button>
         </form>
       </div>

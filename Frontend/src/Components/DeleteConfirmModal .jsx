@@ -1,7 +1,7 @@
-import React, { useContext, useEffect } from "react";
+import React from "react";
 
-import { CounterContext } from "../Context/Context";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const DeleteConfirmModal = ({ isOpen, onClose, selectedId, onDeleteSuccess }) => {
   if (!isOpen) return null;
@@ -13,7 +13,7 @@ const DeleteConfirmModal = ({ isOpen, onClose, selectedId, onDeleteSuccess }) =>
       );
 
       if (res.status === 200) {
-        console.log("User deleted successfully");
+        toast.success("Employee deleted successfully")
 
         // Call the callback to remove employee from the list
         if (onDeleteSuccess) {
@@ -24,6 +24,7 @@ const DeleteConfirmModal = ({ isOpen, onClose, selectedId, onDeleteSuccess }) =>
       }
     } catch (error) {
       console.error("Error deleting employee:", error);
+      toast.error("Error deleting employee")
     }
   };
 

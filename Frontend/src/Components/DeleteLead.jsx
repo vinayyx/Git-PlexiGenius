@@ -1,7 +1,8 @@
-import React, { useContext, useEffect } from "react";
+import React from "react";
 
 import { CounterContext } from "../Context/Context";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const DeleteLead = ({ isOpen, onClose, selectedId, onDeleteSuccess }) => {
   if (!isOpen) return null;
@@ -13,7 +14,7 @@ const DeleteLead = ({ isOpen, onClose, selectedId, onDeleteSuccess }) => {
       );
 
       if (res.status === 200) {
-        console.log("User deleted successfully");
+        toast.success("Lead deleted ");
 
         // Call the callback to remove employee from the list
         if (onDeleteSuccess) {
@@ -23,7 +24,7 @@ const DeleteLead = ({ isOpen, onClose, selectedId, onDeleteSuccess }) => {
         onClose(); // close modal
       }
     } catch (error) {
-      console.error("Error deleting employee:", error);
+      toast.error(error);
     }
   };
 
@@ -54,5 +55,3 @@ const DeleteLead = ({ isOpen, onClose, selectedId, onDeleteSuccess }) => {
 };
 
 export default DeleteLead;
-
-

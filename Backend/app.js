@@ -4,22 +4,33 @@ import { ConnectDb } from "./Config/db.js";
 import employee from "./Routes/employeeRoutes.js"
 import { configDotenv } from "dotenv";
 import leads from "./Routes/LeadsRoutes.js"
+import authRoutes from "./Routes/authRoutes.js";
+import { requireAuth } from "./Middleware/requireAuth.js";
+import cookieParser from "cookie-parser";
+
 
 const app = express();
 
 // MIDDLEWARES
-app.use(cors());
-app.use(express.json());
+app.use(
+  cors({
+    origin: "*"
+  })
+);app.use(express.json());
 ConnectDb();
 configDotenv()
+app.use(cookieParser());
+
 
 app.get("/", (req, res) => {
   res.send("Server is ruuning");
 });
 
 
-//Employe Routes
 
+app.use("/api/auth", authRoutes);
+
+//Employe Routes
 app.use("/api", employee)
 app.use("/api", leads)
 
