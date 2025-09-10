@@ -12,11 +12,17 @@ import cookieParser from "cookie-parser";
 const app = express();
 
 // MIDDLEWARES
+import cors from "cors";
+
 app.use(
   cors({
-    origin: "*"
+    origin: [process.env.FRONTEND_URL], // ✅ sirf apna frontend
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true, // agar cookie / JWT bhejni hai
   })
-);app.use(express.json());
+);
+app.use(express.json());
 ConnectDb();
 configDotenv()
 app.use(cookieParser());
